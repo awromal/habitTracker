@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+}
+
+enum LogStatus {
+  COMPLETED
+  SKIPPED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  habits       Habit[]
+
+  @@map("users")
+}
+
+model Habit {
+  id          String     @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  frequency   Frequency  @default(DAILY)
+  createdAt   DateTime   @default(now())
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs        HabitLog[]
+
+  @@index([userId])
+  @@map("habits")
+}
+
+model HabitLog {
+  id       String    @id @default(cuid())
+  habitId  String
+  date     DateTime  @db.Date
+  status   LogStatus @default(COMPLETED)
+  markedAt DateTime  @default(now())
+  habit    Habit     @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@unique([habitId, date])
+  @@index([habitId, date])
+  @@map("habit_logs")
+}

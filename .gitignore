@@ -1,0 +1,10 @@
+# IDE / Tooling
+.claude/
+.agents/
+.gemini/
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

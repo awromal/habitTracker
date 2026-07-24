@@ -1,0 +1,9 @@
+{
+  "name": "habit-tracker-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd server && npm install --include=dev && npx prisma generate && cd ../client && npm install --include=dev && npm run build",
+    "start": "cd server && npx prisma migrate deploy && node --experimental-strip-types src/index.ts"
+  }
+}
